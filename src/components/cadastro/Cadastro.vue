@@ -12,12 +12,16 @@
     <form @submit.prevent="grava()">
       <div class="controle">
         <label for="titulo">TÍTULO</label>
-        <input id="titulo" autocomplete="off" v-model.lazy="foto.titulo">
+        <input v-validate data-vv-rules="required|min:3|max:30" id="titulo" 
+          data-vv-as="título" name="titulo" autocomplete="off" v-model="foto.titulo">
+        <span v-show="errors.has('titulo')" class="erro">{{ errors.first('titulo') }}</span>
       </div>
 
       <div class="controle">
         <label for="url">URL</label>
-        <input id="url" autocomplete="off" v-model.lazy="foto.url">
+        <input v-validate data-vv-rules="required" id="url" 
+          name="url" autocomplete="off" v-model="foto.url">
+        <span v-show="errors.has('url')" class="erro">{{ errors.first('url') }}</span>
         <imagem-responsiva v-show="foto.url" :url="foto.url" :titulo="foto.titulo"/>
       </div>
 
@@ -59,14 +63,19 @@ export default {
 
   methods: {
       grava() {
+        this.$validator
+          .validateAll()
+          .then(success => {
 
-        this.service 
-          .cadastra(this.foto)
-          .then(() => { 
-            if(this.id) this.$router.push({ name: 'home' })
-            this.foto = new Foto();
-            }, err => console.log(err));
-
+            if(success) {
+              this.service 
+                .cadastra(this.foto)
+                .then(() => { 
+                  if(this.id) this.$router.push({ name: 'home' })
+                  this.foto = new Foto();
+                }, err => console.log(err));
+            }
+          });
       }
   },
 
@@ -103,6 +112,10 @@ export default {
 
   .centralizado {
     text-align: center;
+  }
+
+  .erro {
+    color: red;
   }
 
 </style>
