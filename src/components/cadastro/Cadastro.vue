@@ -40,7 +40,6 @@
 </template>
 
 <script>
-
 import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
 import Botao from '../shared/botao/Botao.vue';
 import Foto from '../../domain/foto/Foto';
@@ -89,6 +88,7 @@ export default {
 }
 
 </script>
+
 <style scoped>
 
   .centralizado {
